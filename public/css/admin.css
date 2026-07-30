@@ -1,0 +1,343 @@
+/* ── ADMIN PAGE STYLES ── */
+
+/* LOGIN */
+.login-screen {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--bg);
+}
+
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-box h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+
+.login-sub {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: -8px;
+}
+
+.login-box label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.login-box input {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: var(--surface-2);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.login-box input:focus {
+  border-color: var(--brand);
+}
+
+.login-box button {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.login-box button:hover {
+  background: var(--brand-dim);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+
+.login-error {
+  background: var(--danger-dim);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ADMIN PANEL */
+.admin-panel {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px 60px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  color: var(--text);
+  text-align: left;
+}
+
+.btn-logout {
+  padding: 8px 20px;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover { background: var(--danger-dim); color: var(--danger); }
+
+/* SECTIONS */
+.admin-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px 28px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.admin-section h2 {
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 20px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ADD FORM */
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select {
+  padding: 9px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  background: var(--surface-2);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--brand);
+}
+
+.form-error {
+  background: var(--danger-dim);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+.btn-add {
+  align-self: flex-start;
+  padding: 11px 28px;
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-add:hover {
+  background: #1e8449;
+  transform: translateY(-1px);
+}
+
+/* TABLE */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#productTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+#productTable th {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+#productTable td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text);
+}
+
+#productTable tbody tr:hover {
+  background: var(--surface-3);
+}
+
+#productTable img.thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.btn-remove {
+  padding: 6px 14px;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn-remove:hover {
+  background: var(--danger-dim);
+  color: var(--danger);
+  transform: scale(1.05);
+}
+
+.count-badge {
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* SAVE SECTION */
+.save-section p {
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.btn-save {
+  padding: 11px 28px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-save:hover {
+  background: var(--brand-dim);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+
+.save-status {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.save-status--saving {
+  background: var(--brand-dim);
+  color: var(--brand);
+  border: 1px solid var(--brand);
+}
+
+.save-status--ok {
+  background: rgba(34, 168, 85, 0.12);
+  color: #22a855;
+  border: 1px solid #22a855;
+}
+
+.save-status--error {
+  background: var(--danger-dim);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.save-status--warn {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .admin-panel { padding: 0 12px 40px; }
+  .admin-section { padding: 20px 16px; }
+  .login-box { padding: 32px 24px; }
+}
