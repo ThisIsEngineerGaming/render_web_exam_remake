@@ -1,80 +1,33 @@
-// cookie helpers
-// sets a cookie with the given name, value, and lifetime in days
-function setCookie(name, value, days) {
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
-}
-
-// reads a cookie by name, returns an empty string if not found
-function getCookie(name) {
-  return document.cookie.split('; ').reduce((r, v) => {
-    const [key, ...val] = v.split('=');
-    return key === name ? decodeURIComponent(val.join('=')) : r;
-  }, '');
-}
-
-// deletes the cookie by setting expire date into the past
-function deleteCookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-}
-
-// cart persistence
-
-const CART_COOKIE = 'mailabom_cart'; // cookie key for storing the serialized cart
-const CART_DAYS   = 7;               // cart cookie lifetime in days
-
-// reads and parses the cart array from the cookie; returns [] if the cookie is missing or malformed
-function loadCart() {
-  try {
-    const raw = getCookie(CART_COOKIE);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-// serializes the cart array and writes it to the cart cookie
-function saveCart(cart) {
-  setCookie(CART_COOKIE, JSON.stringify(cart), CART_DAYS);
-}
+import { store } from '../redux/store.js';
+import {
+  addProduct,
+  removeProduct as removeProductAction,
+  updateQty as updateQtyAction,
+  clearCart as clearCartAction,
+  selectCartItems,
+  selectCartTotal,
+} from '../redux/cartSlice.js';
 
 // cart operations
 
 // adds an item to the cart; increments qty if the same ID already exists, otherwise pushes a new entry
 function addToCart(item) {
-  const cart     = loadCart();
-  const existing = cart.find(i => i.id === item.id);
-  if (existing) {
-    existing.qty += item.qty ?? 1;
-  } else {
-    cart.push({ qty: 1, ...item });
-  }
-  saveCart(cart);
-  renderCart();
+  store.dispatch(addProduct(item, item.qty ?? 1));
 }
 
 // removes an item from the cart entirely by its ID
 function removeFromCart(id) {
-  const cart = loadCart().filter(i => i.id !== id);
-  saveCart(cart);
-  renderCart();
+  store.dispatch(removeProductAction(id));
 }
 
 // changes a cart item's quantity by delta (+1 or -1); removes the item if quantity drops to 0 or below
 function updateQty(id, delta) {
-  const cart = loadCart();
-  const item = cart.find(i => i.id === id);
-  if (!item) return;
-  item.qty += delta;
-  if (item.qty <= 0) return removeFromCart(id);
-  saveCart(cart);
-  renderCart();
+  store.dispatch(updateQtyAction({ productId: id, delta }));
 }
 
 // empties the entire cart by deleting its cookie
 function clearCart() {
-  deleteCookie(CART_COOKIE);
-  renderCart();
+  store.dispatch(clearCartAction());
 }
 
 // rendering
@@ -86,7 +39,8 @@ function renderCart() {
   const total = document.getElementById('cart-total');
   if (!list) return;
 
-  const cart = loadCart();
+  const state = store.getState();
+  const cart  = selectCartItems(state);
   list.innerHTML = '';
 
   if (cart.length === 0) {
@@ -95,15 +49,13 @@ function renderCart() {
     return;
   }
 
-  let sum = 0;
   cart.forEach(item => {
-    sum += item.price * item.qty;
-
+    const unitPrice = item.discountedPrice ?? item.price;
     const row = document.createElement('div');
     row.className = 'cart-row';
     row.innerHTML = `
       <span class="cart-name">${item.name}</span>
-      <span class="cart-price">$${(item.price * item.qty).toFixed(2)}</span>
+      <span class="cart-price">$${(unitPrice * item.qty).toFixed(2)}</span>
       <div class="cart-qty">
         <button onclick="window.updateQty(${item.id}, -1)">−</button>
         <span>${item.qty}</span>
@@ -114,15 +66,17 @@ function renderCart() {
     list.appendChild(row);
   });
 
-  if (total) total.textContent = sum.toFixed(2);
+  if (total) total.textContent = selectCartTotal(state).toFixed(2);
 }
+
+store.subscribe(renderCart);
 
 // order submission
 // handles the order form submit: validates the cart is non-empty, collects all form field values into an order object, logs it, clears the cart, and resets the form
 function handleOrder(e) {
   e.preventDefault();
 
-  const cart = loadCart();
+  const cart = selectCartItems(store.getState());
   if (cart.length === 0) {
     alert('Your cart is empty — add some items before ordering.');
     return;
@@ -160,4 +114,4 @@ window.removeFromCart = removeFromCart;
 window.updateQty = updateQty;
 window.clearCart = clearCart;
 
-export default { addToCart, removeFromCart, updateQty, clearCart, loadCart, saveCart, renderCart };
+export default { addToCart, removeFromCart, updateQty, clearCart, renderCart };
