@@ -4,7 +4,7 @@ import { removeFromCart, updateQty, clearCart } from "../cartStore.js";
 // Port of html/cart.html + js/entities/Cart.js's DOM-binding logic
 export default function CartPage() {
   const cart = useCart();
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const total = cart.reduce((sum, item) => sum + (item.discountedPrice ?? item.price) * item.qty, 0);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -49,7 +49,7 @@ export default function CartPage() {
                 cart.map(item => (
                   <div className="cart-row" key={item.id}>
                     <span className="cart-name">{item.name}</span>
-                    <span className="cart-price">${(item.price * item.qty).toFixed(2)}</span>
+                    <span className="cart-price">${((item.discountedPrice ?? item.price) * item.qty).toFixed(2)}</span>
                     <div className="cart-qty">
                       <button type="button" onClick={() => updateQty(item.id, -1)}>−</button>
                       <span>{item.qty}</span>

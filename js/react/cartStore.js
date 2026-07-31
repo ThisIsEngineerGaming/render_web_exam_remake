@@ -25,7 +25,9 @@ function deleteCookie(name) {
 export function loadCart() {
   try {
     const raw = getCookie(CART_COOKIE);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : (parsed.items ?? []);
   } catch {
     return [];
   }
