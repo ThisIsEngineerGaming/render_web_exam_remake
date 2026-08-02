@@ -1,13 +1,18 @@
-import { useTheme } from "../ThemeContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTheme, toggleTheme } from "../../redux/themeSlice.js";
 
-// Dark/light theme toggle button. Theme state itself now lives in ThemeContext
-// (see ../ThemeContext.jsx) — this component is just a consumer of it.
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useSelector(selectTheme);
+  const dispatch = useDispatch();
 
   return (
-    <button id="themeToggle" className="theme-toggle" onClick={toggleTheme}>
-      {theme === "light" ? "Dark" : "Light"}
+    <button
+      id="themeToggle"
+      className="icon-btn theme-toggle"
+      onClick={() => dispatch(toggleTheme())}
+      aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+    >
+      <span aria-hidden="true">{theme === "light" ? "L" : "D"}</span>
     </button>
   );
 }

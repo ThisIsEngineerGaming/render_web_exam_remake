@@ -1,10 +1,17 @@
-import { useCart } from "../useCart.js";
-import { removeFromCart, updateQty, clearCart } from "../cartStore.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeProduct,
+  updateQty,
+  clearCart,
+  selectCartItems,
+  selectCartTotal,
+} from "../../redux/cartSlice.js";
 
 // Port of html/cart.html + js/entities/Cart.js's DOM-binding logic
 export default function CartPage() {
-  const cart = useCart();
-  const total = cart.reduce((sum, item) => sum + (item.discountedPrice ?? item.price) * item.qty, 0);
+  const cart = useSelector(selectCartItems);
+  const total = useSelector(selectCartTotal);
+  const dispatch = useDispatch();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -29,7 +36,7 @@ export default function CartPage() {
 
     console.log("Order submitted:", order);
     alert("Order sent! Thank you.");
-    clearCart();
+    dispatch(clearCart());
     form.reset();
   }
 
@@ -51,11 +58,11 @@ export default function CartPage() {
                     <span className="cart-name">{item.name}</span>
                     <span className="cart-price">${((item.discountedPrice ?? item.price) * item.qty).toFixed(2)}</span>
                     <div className="cart-qty">
-                      <button type="button" onClick={() => updateQty(item.id, -1)}>−</button>
+                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: -1 }))}>−</button>
                       <span>{item.qty}</span>
-                      <button type="button" onClick={() => updateQty(item.id, 1)}>+</button>
+                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: 1 }))}>+</button>
                     </div>
-                    <button type="button" className="cart-remove" onClick={() => removeFromCart(item.id)}>✕</button>
+                    <button type="button" className="cart-remove" onClick={() => dispatch(removeProduct(item.id))}>✕</button>
                   </div>
                 ))
               )}
@@ -64,7 +71,7 @@ export default function CartPage() {
               <span>Total</span>
               <span>$<span id="cart-total">{total.toFixed(2)}</span></span>
             </div>
-            <button type="button" className="clear-cart-btn" onClick={() => clearCart()}>
+            <button type="button" className="clear-cart-btn" onClick={() => dispatch(clearCart())}>
               Clear cart
             </button>
           </div>

@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./ThemeContext.jsx";
+import { store } from "../redux/store.js";
 import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Products from "./pages/Products.jsx";
@@ -9,7 +10,7 @@ import CartPage from "./pages/Cart.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
+    <Provider store={store}>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
@@ -19,6 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </Route>
         </Routes>
       </BrowserRouter>
-    </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 );

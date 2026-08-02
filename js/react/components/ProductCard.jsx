@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { addToCart } from "../cartStore.js";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../redux/cartSlice.js";
 
 // Port of js/entities/Product.js's createCard() method as a React component.
-// Keeps the same brief scale-bounce + "Added!" feedback on click.
 export default function ProductCard({ product }) {
   const [added, setAdded] = useState(false);
   const [scale, setScale] = useState(1);
+  const dispatch = useDispatch();
 
   function handleAdd() {
     setScale(0.88);
@@ -15,11 +16,11 @@ export default function ProductCard({ product }) {
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
 
-    addToCart({
+    dispatch(addProduct({
       id:    product.id,
       name:  product.name,
       price: product.discountedPrice,
-    });
+    }));
   }
 
   const stars = "\u2605".repeat(product.rating) + "\u2606".repeat(5 - product.rating);
