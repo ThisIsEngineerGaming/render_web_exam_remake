@@ -4,7 +4,7 @@ import Category from "../entities/Category.js";
 import Manufacturer from "../entities/Manufacturer.js";
 import Customer from "../entities/Customer.js";
 import { db } from "../firebase.js";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
 // Static data — category and manufacturer lookup maps keyed by ID
 export const categories = {
@@ -38,4 +38,10 @@ export function createProductInstance(item) {
 // Fetches all products from the Firestore "products" collection and returns them as plain objects
 export function fetchProducts() {
   return getDocs(collection(db, "products")).then(snapshot => snapshot.docs.map(d => d.data()));
+}
+
+// Fetches a single product by ID directly (Firestore doc ID == product's numeric id, stringified
+// — see js/admin.js's setDoc/deleteDoc calls). Returns null if no such product exists.
+export function fetchProductById(id) {
+  return getDoc(doc(db, "products", String(id))).then(snap => (snap.exists() ? snap.data() : null));
 }

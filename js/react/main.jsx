@@ -6,6 +6,7 @@ import { store } from "../redux/store.js";
 import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Products from "./pages/Products.jsx";
+import ProductDetail from "./pages/ProductDetail.jsx";
 import CartPage from "./pages/Cart.jsx";
 import ThemeWrapper from "./styles/ThemeWrapper.jsx";
 
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/cart" element={<CartPage />} />
             </Route>
           </Routes>

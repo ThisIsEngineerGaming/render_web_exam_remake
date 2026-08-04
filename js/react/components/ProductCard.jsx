@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../redux/cartSlice.js";
 
 const Card = styled.div`
+  cursor: pointer;
   background: ${({ theme }) => theme.cardBg};
   color: ${({ theme }) => theme.text};
   border: 1px solid ${({ theme }) => theme.border};
@@ -81,12 +83,28 @@ const AddToCartBtn = styled.button`
 `;
 
 // Port of js/entities/Product.js's createCard() method as a React component.
+// The whole card navigates to its /product/:id detail page on click; the "Add to cart"
+// button stops that click from bubbling up so it can do its own thing instead.
 export default function ProductCard({ product }) {
   const [added, setAdded] = useState(false);
   const [scale, setScale] = useState(1);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  function handleAdd() {
+  function goToDetail() {
+    navigate(`/product/${product.id}`);
+  }
+
+  function handleCardKeyDown(e) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      goToDetail();
+    }
+  }
+
+  function handleAdd(e) {
+    e.stopPropagation();
+
     setScale(0.88);
     setTimeout(() => setScale(1.08), 100);
     setTimeout(() => setScale(1), 200);
@@ -106,7 +124,13 @@ export default function ProductCard({ product }) {
   const stars = "\u2605".repeat(product.rating) + "\u2606".repeat(5 - product.rating);
 
   return (
-    <Card>
+    <Card
+      onClick={goToDetail}
+      onKeyDown={handleCardKeyDown}
+      role="link"
+      tabIndex={0}
+      aria-label={`View details for ${product.name}`}
+    >
       <CardImage src={product.imageUrl} alt={product.name} />
       <ProductName>{product.name}</ProductName>
       <Stars>{stars}</Stars>
