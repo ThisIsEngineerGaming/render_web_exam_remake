@@ -1,7 +1,19 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ThemeToggle from "./components/ThemeToggle.jsx";
 import { selectCartItemCount } from "../redux/cartSlice.js";
+import {
+  Header,
+  BrandLogo,
+  BrandIcon,
+  Nav,
+  NavItem,
+  HeaderActions,
+  IconLink,
+  CartLink,
+  CartBadge,
+  Footer,
+} from "./Layout.styles.js";
 
 // Shared header/footer chrome for every routed page (Home, Products, Cart).
 // The admin panel is intentionally NOT part of this router — it stays a
@@ -11,44 +23,40 @@ export default function Layout() {
 
   return (
     <>
-      <header>
-        <Link to="/" className="brand-logo">
-          <img src="/icon.png" alt="" className="brand-icon" aria-hidden="true" />
+      <Header>
+        <BrandLogo to="/">
+          <BrandIcon src="/icon.png" alt="" aria-hidden="true" />
           <span>MailABom</span>
-        </Link>
+        </BrandLogo>
 
-        <nav className="navigation">
-          <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+        <Nav>
+          <NavItem to="/" end>
             Homepage
-          </NavLink>
-          <NavLink to="/products" className={({ isActive }) => (isActive ? "active" : "")}>
-            Products
-          </NavLink>
-          <NavLink to="/cart" className={({ isActive }) => (isActive ? "active" : "")}>
-            Cart
-          </NavLink>
-        </nav>
+          </NavItem>
+          <NavItem to="/products">Products</NavItem>
+          <NavItem to="/cart">Cart</NavItem>
+        </Nav>
 
-        <div className="header-actions">
+        <HeaderActions>
           <ThemeToggle />
 
-          <Link to="/products" className="icon-btn" aria-label="Search products">
+          <IconLink to="/products" aria-label="Search products">
             <span aria-hidden="true">P</span>
-          </Link>
+          </IconLink>
 
-          <Link to="/cart" className="icon-btn cart-btn" aria-label="View cart">
+          <CartLink to="/cart" aria-label="View cart">
             <span aria-hidden="true">&#128722;</span>
-            <span className="cart-badge">{cartCount}</span>
-          </Link>
-        </div>
-      </header>
+            <CartBadge>{cartCount}</CartBadge>
+          </CartLink>
+        </HeaderActions>
+      </Header>
 
       <Outlet />
 
-      <footer>
+      <Footer>
         <p>mailabom@gmail.gamer</p>
         <p>2026 &copy;</p>
-      </footer>
+      </Footer>
     </>
   );
 }

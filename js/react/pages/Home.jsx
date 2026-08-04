@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import MarqueeTicker from "../components/MarqueeTicker.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers, customer } from "../data.js";
 import Order from "../../entities/Order.js";
+import { VideoBanner, VideoOverlay, ProductsGrid, ShowMore } from "./Home.styles.js";
 
 // Port of the "INDEX PAGE" block from the old js/app.js
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
 
-    fetchProducts().then(data => {
+    fetchProducts().then((data) => {
       if (cancelled) return;
       const preview = data.slice(0, 8);
       setProducts(preview);
@@ -28,37 +28,35 @@ export default function Home() {
       console.log(order.status);
     });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
     <>
-      <div className="video-banner">
+      <VideoBanner>
         <marquee behavior="scroll" direction="right" loop="infinite" bgColor="#0f0f0f">
           <img src="/img/placeholder.png" alt="freddy" />
           <img src="/img/placeholder.png" alt="freddy" />
           <img src="/img/placeholder.png" alt="freddy" />
         </marquee>
-        <div className="video-overlay">
-          <img src="/icon.png" alt="" className="overlay-icon" aria-hidden="true" />
+        <VideoOverlay>
           <p>MailABom</p>
-        </div>
-      </div>
+        </VideoOverlay>
+      </VideoBanner>
 
       <MarqueeTicker />
 
-      <div
-        id="products"
-        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px" }}
-      >
-        {products.map(item => (
+      <ProductsGrid>
+        {products.map((item) => (
           <ProductCard key={item.id} product={item} />
         ))}
-      </div>
+      </ProductsGrid>
 
-      <Link className="showmore" to="/products">
+      <ShowMore to="/products">
         <p>showmore</p>
-      </Link>
+      </ShowMore>
     </>
   );
 }

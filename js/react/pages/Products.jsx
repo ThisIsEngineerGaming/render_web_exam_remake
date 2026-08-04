@@ -1,14 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers } from "../data.js";
+import {
+  SearchBarWrapper,
+  SearchBarInner,
+  SearchInput,
+  ClearSearchBtn,
+  PageLayout,
+  FilterSidebar,
+  SidebarSection,
+  FilterList,
+  FilterItem,
+  ProductsMain,
+  ResultsInfo,
+  ProductsContainer,
+  NoResults,
+} from "./Products.styles.js";
 
 // Port of the "PRODUCTS PAGE" block from the old js/app.js
 export default function Products() {
-  const [allProducts, setAllProducts]           = useState([]);
-  const [activeCategory, setActiveCategory]     = useState("all");
+  const [allProducts, setAllProducts] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("all");
   const [activeManufacturer, setActiveManufacturer] = useState("all");
-  const [activeRating, setActiveRating]         = useState("all");
-  const [searchQuery, setSearchQuery]           = useState("");
+  const [activeRating, setActiveRating] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchProducts().then(setAllProducts);
@@ -16,147 +31,119 @@ export default function Products() {
 
   // Unique category / manufacturer IDs present in the data, for the sidebar lists
   const categoryIds = useMemo(
-    () => [...new Set(allProducts.map(p => p.categoryId))].filter(id => categories[id]),
+    () => [...new Set(allProducts.map((p) => p.categoryId))].filter((id) => categories[id]),
     [allProducts]
   );
   const manufacturerIds = useMemo(
-    () => [...new Set(allProducts.map(p => p.manufacturerId))].filter(id => manufacturers[id]),
+    () => [...new Set(allProducts.map((p) => p.manufacturerId))].filter((id) => manufacturers[id]),
     [allProducts]
   );
 
   const filtered = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    return allProducts.filter(item => {
+    return allProducts.filter((item) => {
       const matchSearch = !query || item.name.toLowerCase().includes(query);
-      const matchCat    = activeCategory     === "all" || String(item.categoryId)     === String(activeCategory);
-      const matchMfr    = activeManufacturer === "all" || String(item.manufacturerId) === String(activeManufacturer);
-      const matchRating = activeRating       === "all" || item.rating >= Number(activeRating);
+      const matchCat = activeCategory === "all" || String(item.categoryId) === String(activeCategory);
+      const matchMfr =
+        activeManufacturer === "all" || String(item.manufacturerId) === String(activeManufacturer);
+      const matchRating = activeRating === "all" || item.rating >= Number(activeRating);
       return matchSearch && matchCat && matchMfr && matchRating;
     });
   }, [allProducts, searchQuery, activeCategory, activeManufacturer, activeRating]);
 
   return (
     <>
-      <div className="search-bar-wrapper">
-        <div className="search-bar-inner">
-          <input
+      <SearchBarWrapper>
+        <SearchBarInner>
+          <SearchInput
             type="text"
-            id="searchInput"
             placeholder="Search products..."
             autoComplete="off"
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button
-            id="clearSearch"
-            title="Clear"
-            style={{ display: searchQuery ? "flex" : "none" }}
-            onClick={() => setSearchQuery("")}
-          >
+          <ClearSearchBtn $visible={Boolean(searchQuery)} title="Clear" onClick={() => setSearchQuery("")}>
             &#10005;
-          </button>
-        </div>
-      </div>
+          </ClearSearchBtn>
+        </SearchBarInner>
+      </SearchBarWrapper>
 
-      <div className="products-page-layout">
-        <aside className="filter-sidebar">
-          <div className="sidebar-section">
+      <PageLayout>
+        <FilterSidebar>
+          <SidebarSection>
             <h3>Category</h3>
-            <ul id="categoryList">
-              <li
-                className={`filter-item${activeCategory === "all" ? " active" : ""}`}
-                onClick={() => setActiveCategory("all")}
-              >
+            <FilterList>
+              <FilterItem $active={activeCategory === "all"} onClick={() => setActiveCategory("all")}>
                 All
-              </li>
-              {categoryIds.map(id => (
-                <li
+              </FilterItem>
+              {categoryIds.map((id) => (
+                <FilterItem
                   key={id}
-                  className={`filter-item${String(activeCategory) === String(id) ? " active" : ""}`}
+                  $active={String(activeCategory) === String(id)}
                   onClick={() => setActiveCategory(id)}
                 >
                   {categories[id].name}
-                </li>
+                </FilterItem>
               ))}
-            </ul>
-          </div>
+            </FilterList>
+          </SidebarSection>
 
-          <div className="sidebar-section">
+          <SidebarSection>
             <h3>Manufacturer</h3>
-            <ul id="manufacturerList">
-              <li
-                className={`filter-item${activeManufacturer === "all" ? " active" : ""}`}
+            <FilterList>
+              <FilterItem
+                $active={activeManufacturer === "all"}
                 onClick={() => setActiveManufacturer("all")}
               >
                 All
-              </li>
-              {manufacturerIds.map(id => (
-                <li
+              </FilterItem>
+              {manufacturerIds.map((id) => (
+                <FilterItem
                   key={id}
-                  className={`filter-item${String(activeManufacturer) === String(id) ? " active" : ""}`}
+                  $active={String(activeManufacturer) === String(id)}
                   onClick={() => setActiveManufacturer(id)}
                 >
                   {manufacturers[id].name}
-                </li>
+                </FilterItem>
               ))}
-            </ul>
-          </div>
+            </FilterList>
+          </SidebarSection>
 
-          <div className="sidebar-section">
+          <SidebarSection>
             <h3>Rating</h3>
-            <ul id="ratingList">
-              <li
-                className={`filter-item${activeRating === "all" ? " active" : ""}`}
-                onClick={() => setActiveRating("all")}
-              >
+            <FilterList>
+              <FilterItem $active={activeRating === "all"} onClick={() => setActiveRating("all")}>
                 All
-              </li>
-              <li
-                className={`filter-item${activeRating === "5" ? " active" : ""}`}
-                onClick={() => setActiveRating("5")}
-              >
+              </FilterItem>
+              <FilterItem $active={activeRating === "5"} onClick={() => setActiveRating("5")}>
                 &#9733;&#9733;&#9733;&#9733;&#9733;
-              </li>
-              <li
-                className={`filter-item${activeRating === "4" ? " active" : ""}`}
-                onClick={() => setActiveRating("4")}
-              >
+              </FilterItem>
+              <FilterItem $active={activeRating === "4"} onClick={() => setActiveRating("4")}>
                 &#9733;&#9733;&#9733;&#9733;+
-              </li>
-              <li
-                className={`filter-item${activeRating === "3" ? " active" : ""}`}
-                onClick={() => setActiveRating("3")}
-              >
+              </FilterItem>
+              <FilterItem $active={activeRating === "3"} onClick={() => setActiveRating("3")}>
                 &#9733;&#9733;&#9733;+
-              </li>
-            </ul>
-          </div>
-        </aside>
+              </FilterItem>
+            </FilterList>
+          </SidebarSection>
+        </FilterSidebar>
 
-        <div className="products-main">
-          <div className="results-info">
-            <span id="resultsCount">
-              {filtered.length > 0
-                ? `${filtered.length} product${filtered.length !== 1 ? "s" : ""} found`
-                : ""}
-            </span>
-          </div>
+        <ProductsMain>
+          <ResultsInfo>
+            {filtered.length > 0
+              ? `${filtered.length} product${filtered.length !== 1 ? "s" : ""} found`
+              : ""}
+          </ResultsInfo>
 
-          <div id="products">
-            <div id="productsContainer">
-              {filtered.map(item => (
-                <ProductCard key={item.id} product={createProductInstance(item)} />
-              ))}
-            </div>
-          </div>
+          <ProductsContainer>
+            {filtered.map((item) => (
+              <ProductCard key={item.id} product={createProductInstance(item)} />
+            ))}
+          </ProductsContainer>
 
-          {filtered.length === 0 && (
-            <div id="noResults" className="no-results">
-              No products found matching your search.
-            </div>
-          )}
-        </div>
-      </div>
+          {filtered.length === 0 && <NoResults>No products found matching your search.</NoResults>}
+        </ProductsMain>
+      </PageLayout>
     </>
   );
 }

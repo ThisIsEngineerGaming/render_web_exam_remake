@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import {
   removeProduct,
   updateQty,
@@ -6,6 +5,27 @@ import {
   selectCartItems,
   selectCartTotal,
 } from "../../redux/cartSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  PageContainer,
+  CheckoutForm,
+  Grid,
+  SectionTitle,
+  Field,
+  FieldLabel,
+  RadioRow,
+  CheckboxRow,
+  SubmitBtn,
+  CartPanel,
+  CartRow,
+  CartName,
+  CartPrice,
+  CartQty,
+  CartRemoveBtn,
+  CartTotalRow,
+  EmptyCart,
+  ClearCartBtn,
+} from "./Cart.styles.js";
 
 // Port of html/cart.html + js/entities/Cart.js's DOM-binding logic
 export default function CartPage() {
@@ -21,17 +41,17 @@ export default function CartPage() {
       return;
     }
 
-    const form  = e.target;
+    const form = e.target;
     const order = {
-      name:         form.querySelector('input[type="text"]').value,
-      phone:        form.querySelector('input[type="tel"]').value,
+      name: form.querySelector('input[type="text"]').value,
+      phone: form.querySelector('input[type="tel"]').value,
       instructions: form.querySelectorAll('input[type="text"]')[1]?.value || "",
-      delivery:     form.querySelector("select").value,
-      address:      form.querySelectorAll('input[type="text"]')[2]?.value || "",
-      payment:      form.querySelector('input[name="payment"]:checked')?.value,
-      register:     form.querySelector('input[name="register"]').checked,
-      no_call:      form.querySelector('input[name="no_call"]').checked,
-      items:        cart,
+      delivery: form.querySelector("select").value,
+      address: form.querySelectorAll('input[type="text"]')[2]?.value || "",
+      payment: form.querySelector('input[name="payment"]:checked')?.value,
+      register: form.querySelector('input[name="register"]').checked,
+      no_call: form.querySelector('input[name="no_call"]').checked,
+      items: cart,
     };
 
     console.log("Order submitted:", order);
@@ -41,97 +61,106 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container">
-      <form
-        onSubmit={handleSubmit}
-        style={{ position: "static", transform: "none", margin: "40px auto", width: "max-content", maxWidth: "95vw" }}
-      >
-        <div className="grid">
-          <div className="cart-panel">
-            <div className="section-title">Your Items</div>
-            <div id="cart-items">
+    <PageContainer>
+      <CheckoutForm onSubmit={handleSubmit}>
+        <Grid>
+          <CartPanel>
+            <SectionTitle>Your Items</SectionTitle>
+            <div>
               {cart.length === 0 ? (
-                <p className="empty-cart">Your cart is empty.</p>
+                <EmptyCart>Your cart is empty.</EmptyCart>
               ) : (
-                cart.map(item => (
-                  <div className="cart-row" key={item.id}>
-                    <span className="cart-name">{item.name}</span>
-                    <span className="cart-price">${((item.discountedPrice ?? item.price) * item.qty).toFixed(2)}</span>
-                    <div className="cart-qty">
-                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: -1 }))}>−</button>
+                cart.map((item) => (
+                  <CartRow key={item.id}>
+                    <CartName>{item.name}</CartName>
+                    <CartPrice>${((item.discountedPrice ?? item.price) * item.qty).toFixed(2)}</CartPrice>
+                    <CartQty>
+                      <button
+                        type="button"
+                        onClick={() => dispatch(updateQty({ productId: item.id, delta: -1 }))}
+                      >
+                        &minus;
+                      </button>
                       <span>{item.qty}</span>
-                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: 1 }))}>+</button>
-                    </div>
-                    <button type="button" className="cart-remove" onClick={() => dispatch(removeProduct(item.id))}>✕</button>
-                  </div>
+                      <button
+                        type="button"
+                        onClick={() => dispatch(updateQty({ productId: item.id, delta: 1 }))}
+                      >
+                        +
+                      </button>
+                    </CartQty>
+                    <CartRemoveBtn type="button" onClick={() => dispatch(removeProduct(item.id))}>
+                      &#10005;
+                    </CartRemoveBtn>
+                  </CartRow>
                 ))
               )}
             </div>
-            <div className="cart-total-row">
+            <CartTotalRow>
               <span>Total</span>
-              <span>$<span id="cart-total">{total.toFixed(2)}</span></span>
-            </div>
-            <button type="button" className="clear-cart-btn" onClick={() => dispatch(clearCart())}>
+              <span>${total.toFixed(2)}</span>
+            </CartTotalRow>
+            <ClearCartBtn type="button" onClick={() => dispatch(clearCart())}>
               Clear cart
-            </button>
-          </div>
+            </ClearCartBtn>
+          </CartPanel>
 
           <div>
-            <div className="section-title">Info</div>
-            <div className="field">
+            <SectionTitle>Info</SectionTitle>
+            <Field>
               <input type="text" placeholder="Name, Surname" minLength={3} maxLength={40} required />
-            </div>
-            <div className="field">
+            </Field>
+            <Field>
               <input type="tel" placeholder="+380XXXXXXXXX" pattern="^\+?[0-9]{10,15}$" required />
-            </div>
-            <div className="field">
+            </Field>
+            <Field>
               <input type="text" placeholder="Special Instructions" maxLength={120} />
-            </div>
+            </Field>
           </div>
 
           <div>
-            <div className="section-title">Delivery</div>
-            <div className="field">
-              <div className="field-label">Way to deliver</div>
+            <SectionTitle>Delivery</SectionTitle>
+            <Field>
+              <FieldLabel>Way to deliver</FieldLabel>
               <select required defaultValue="">
                 <option value="">Choose delivery</option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
               </select>
-            </div>
-            <div className="field">
-              <div className="field-label">Address</div>
+            </Field>
+            <Field>
+              <FieldLabel>Address</FieldLabel>
               <input type="text" placeholder="City, Street" minLength={5} maxLength={80} required />
-            </div>
+            </Field>
           </div>
 
           <div>
-            <div className="section-title">Payment</div>
-            <label className="radio-row">
+            <SectionTitle>Payment</SectionTitle>
+            <RadioRow>
               <input type="radio" name="payment" value="cod" required />
               On pick up
-            </label>
-            <label className="radio-row">
+            </RadioRow>
+            <RadioRow>
               <input type="radio" name="payment" value="card" />
               Card
-            </label>
+            </RadioRow>
           </div>
 
           <div>
-            <label className="checkbox-row">
+            <CheckboxRow>
               <input type="checkbox" name="register" />
               Register
-            </label>
-            <label className="checkbox-row">
+            </CheckboxRow>
+            <CheckboxRow>
               <input type="checkbox" name="no_call" defaultChecked />
               The decision is final, don't call me back.
-            </label>
+            </CheckboxRow>
           </div>
 
-          <button type="submit" className="submit-btn">Send</button>
-        </div>
-      </form>
-    </div>
+          <SubmitBtn type="submit">Send</SubmitBtn>
+        </Grid>
+      </CheckoutForm>
+    </PageContainer>
   );
 }
