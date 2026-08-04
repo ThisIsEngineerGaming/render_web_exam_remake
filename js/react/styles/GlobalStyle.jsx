@@ -1,7 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-// Replaces the shared reset/typography rules that used to sit at the top
-// of public/css/style.css, products.css and cart.css.
+// Replaces the shared reset/typography rules that used to sit at the top of public/css/style.css, products.css and cart.css.
 export const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     margin: 0;

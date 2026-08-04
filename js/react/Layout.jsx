@@ -15,9 +15,7 @@ import {
   Footer,
 } from "./Layout.styles.js";
 
-// Shared header/footer chrome for every routed page (Home, Products, Cart).
-// The admin panel is intentionally NOT part of this router — it stays a
-// separate static page at /html/admin.html.
+// Shared header/footer chrome for every routed page.
 export default function Layout() {
   const cartCount = useSelector(selectCartItemCount);
 

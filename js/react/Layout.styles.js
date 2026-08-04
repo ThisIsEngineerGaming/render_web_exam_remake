@@ -48,8 +48,7 @@ export const Nav = styled.nav`
   flex: 1;
 `;
 
-// NavLink auto-appends an "active" class when its route matches, as long as
-// we don't pass our own className prop — so `&.active` below just works.
+// NavLink auto-appends an "active" class when its route matches, as long as we don't pass our own className prop — so `&.active` below just works.
 export const NavItem = styled(NavLink)`
   display: inline-flex;
   align-items: center;

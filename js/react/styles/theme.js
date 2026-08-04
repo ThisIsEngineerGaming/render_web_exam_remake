@@ -1,7 +1,6 @@
 // Theme tokens for styled-components.
 // Mirrors the CSS custom properties that used to live in public/css/*.css.
-// `themes.dark` / `themes.light` hold color values that swap with the
-// dark/light toggle; `tokens` holds values that never change per-theme.
+// `themes.dark` / `themes.light` hold color values that swap with the dark/light toggle; `tokens` holds values that never change per-theme.
 
 export const themes = {
   dark: {

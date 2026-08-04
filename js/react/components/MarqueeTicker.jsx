@@ -40,8 +40,7 @@ const ScrollContent = styled.div`
   }
 `;
 
-// Fills the track with clones of the original content until it's at least twice
-// the viewport width, then continuously scrolls it leftward, looping seamlessly.
+// Fills the track with clones of the original content until it's at least twice the viewport width, then continuously scrolls it leftward, looping seamlessly.
 // Port of js/entities/Scroller.js as a self-contained React component.
 export default function MarqueeTicker() {
   const trackRef = useRef(null);
