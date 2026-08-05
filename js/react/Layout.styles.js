@@ -9,8 +9,8 @@ export const Header = styled.header`
   background: ${({ theme }) => theme.surface};
   border-bottom: 1px solid ${({ theme }) => theme.border};
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 0 36px;
   gap: 24px;
   transition: background 0.3s, border-color 0.3s;
@@ -40,12 +40,15 @@ export const BrandIcon = styled.img`
 `;
 
 export const Nav = styled.nav`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(20px, 3vw, 40px);
   margin: 0;
-  flex: 1;
 `;
 
 // NavLink auto-appends an "active" class when its route matches, as long as we don't pass our own className prop — so `&.active` below just works.
@@ -96,7 +99,6 @@ export const HeaderActions = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;
-  flex-shrink: 0;
 `;
 
 // Shared "icon button" look for the search/cart links in the header.
