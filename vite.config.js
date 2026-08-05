@@ -13,10 +13,8 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        // Home, Products, and Cart are now client-routed pages served from a single
-        // SPA entry (see js/react/main.jsx). Admin remains its own static page.
+        // All pages, including Admin, are client-routed from the SPA entry.
         main:  resolve(__dirname, 'index.html'),
-        admin: resolve(__dirname, 'html/admin.html'),
       },
     },
   },

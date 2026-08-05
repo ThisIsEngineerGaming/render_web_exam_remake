@@ -8,6 +8,8 @@ import Home from "./pages/Home.jsx";
 import Products from "./pages/Products.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import CartPage from "./pages/Cart.jsx";
+import Admin from "./pages/Admin.jsx";
+import NotFound from "./pages/NotFound.jsx";
 import ThemeWrapper from "./styles/ThemeWrapper.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -21,6 +23,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route path="/products" element={<Products />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </BrowserRouter>

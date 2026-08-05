@@ -33,6 +33,7 @@ export default function Layout() {
           </NavItem>
           <NavItem to="/products">Products</NavItem>
           <NavItem to="/cart">Cart</NavItem>
+          <NavItem to="/admin">Admin</NavItem>
         </Nav>
 
         <HeaderActions>

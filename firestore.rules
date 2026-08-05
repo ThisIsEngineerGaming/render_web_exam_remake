@@ -2,6 +2,44 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    function isValidProduct(data) {
+      return data.keys().hasOnly([
+          'id', 'imageUrl', 'name', 'rating', 'price', 'discountedPrice',
+          'categoryId', 'manufacturerId'
+        ]) &&
+        data.keys().hasAll([
+          'id', 'imageUrl', 'name', 'rating', 'price', 'discountedPrice',
+          'categoryId', 'manufacturerId'
+        ]) &&
+        data.id is int && data.id >= 0 &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 120 &&
+        data.imageUrl is string && data.imageUrl.size() <= 2048 &&
+        data.imageUrl.matches('^https?://.+') &&
+        data.rating is int && data.rating >= 1 && data.rating <= 5 &&
+        data.price is number && data.price >= 0 && data.price <= 100000 &&
+        data.discountedPrice is number &&
+        data.discountedPrice >= 0 && data.discountedPrice <= data.price &&
+        data.categoryId is int && data.categoryId >= 1 && data.categoryId <= 4 &&
+        data.manufacturerId is int &&
+        data.manufacturerId >= 1 && data.manufacturerId <= 5;
+    }
+
+    // Public catalogue only. Do not put private data in this collection.
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidProduct(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Deny every other collection by default.
     match /{document=**} {
       allow read, write: if false;
     }

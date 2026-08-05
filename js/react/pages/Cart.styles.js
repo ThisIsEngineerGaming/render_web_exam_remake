@@ -224,6 +224,7 @@ export const CartRemoveBtn = styled.button`
     border-color: ${({ theme }) => theme.danger};
     color: #fff;
   }
+
 `;
 
 export const CartTotalRow = styled.div`
@@ -269,5 +270,16 @@ export const ClearCartBtn = styled.button`
     background: ${({ theme }) => theme.danger};
     border-color: ${({ theme }) => theme.danger};
     color: #fff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:disabled:hover {
+    background: ${({ theme }) => theme.dangerDim};
+    border-color: rgba(229, 62, 62, 0.25);
+    color: ${({ theme }) => theme.danger};
   }
 `;
