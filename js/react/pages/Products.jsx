@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers } from "../data.js";
@@ -20,15 +21,15 @@ import {
 
 export default function Products() {
   const { t } = useTranslation();
-  const [allProducts, setAllProducts] = useState([]);
+  const { data: allProducts = [], isLoading, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
+
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeManufacturer, setActiveManufacturer] = useState("all");
   const [activeRating, setActiveRating] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    fetchProducts().then(setAllProducts);
-  }, []);
 
   const categoryIds = useMemo(
     () => [...new Set(allProducts.map((p) => p.categoryId))].filter((id) => categories[id]),
@@ -51,6 +52,14 @@ export default function Products() {
       return matchSearch && matchCat && matchMfr && matchRating;
     });
   }, [allProducts, searchQuery, activeCategory, activeManufacturer, activeRating]);
+
+  if (isLoading) {
+    return <PageLayout><div>{t("common.loading")}</div></PageLayout>;
+  }
+
+  if (error) {
+    return <PageLayout><div>{t("common.error")}: {error.message}</div></PageLayout>;
+  }
 
   return (
     <>
