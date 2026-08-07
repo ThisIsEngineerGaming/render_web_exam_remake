@@ -9,7 +9,7 @@
   "license": "",
   "author": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -27,8 +27,12 @@
     "styled-components": "^6.4.4"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
     "@vitejs/plugin-react": "^4.3.4",
+    "babel-jest": "^30.4.1",
     "firebase-admin": "^14.2.0",
+    "jest": "^30.4.2",
     "vite": "^6.0.0"
   }
 }
