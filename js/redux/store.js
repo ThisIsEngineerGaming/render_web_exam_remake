@@ -1,14 +1,13 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { getCookie, setCookie, deleteCookie } from '../entities/Cookies.js';
+import { setCookie } from '../entities/Cookies.js';
 import cartReducer from './cartSlice.js';
 import themeReducer from './themeSlice.js';
 
-const CART_COOKIE = 'mailabom_cart';
-const CART_DAYS = 7;
+const CART_STORAGE_KEY = 'mailabom_cart';
 const THEME_COOKIE = 'theme';
 
 function loadCartState() {
-  const raw = getCookie(CART_COOKIE);
+  const raw = localStorage.getItem(CART_STORAGE_KEY);
   if (!raw) return undefined;
 
   try {
@@ -34,11 +33,10 @@ export const store = configureStore({
   preloadedState: preloadedCart ? { cart: preloadedCart } : undefined,
 });
 
-// persist the cart to its cookie on every change, so the next page navigation picks up where this one left off
+// persist the cart to localStorage on every change, so the next page navigation picks up where this one left off
 let lastCartSerialized = JSON.stringify(store.getState().cart);
 let lastTheme = store.getState().theme.value;
 
-// reflect theme onto <html data-theme="..."> so CSS custom properties pick it up
 document.documentElement.setAttribute('data-theme', lastTheme);
 
 store.subscribe(() => {
@@ -48,9 +46,9 @@ store.subscribe(() => {
   if (cartSerialized !== lastCartSerialized) {
     lastCartSerialized = cartSerialized;
     if (state.cart.items.length === 0) {
-      deleteCookie(CART_COOKIE);
+      localStorage.removeItem(CART_STORAGE_KEY);
     } else {
-      setCookie(CART_COOKIE, cartSerialized, CART_DAYS);
+      localStorage.setItem(CART_STORAGE_KEY, cartSerialized);
     }
   }
 

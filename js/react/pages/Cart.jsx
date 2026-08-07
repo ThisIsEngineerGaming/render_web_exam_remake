@@ -35,6 +35,7 @@ export default function CartPage() {
   const cart = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
   const dispatch = useDispatch();
+  /** @type {import("../styles/theme.js").Theme} */
   const theme = useTheme();
 
   const cancelButtonStyle = {

@@ -64,3 +64,7 @@ export const tokens = {
 export function buildTheme(mode) {
   return { ...tokens, ...(themes[mode] ?? themes.dark) };
 }
+
+/**
+ * @typedef {ReturnType<typeof buildTheme>} Theme
+ */
