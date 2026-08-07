@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers } from "../data.js";
 import {
@@ -17,19 +18,17 @@ import {
   NoResults,
 } from "./Products.styles.js";
 
-// Port of the "PRODUCTS PAGE" block from the old js/app.js
 export default function Products() {
-  const [allProducts, setAllProducts] = useState([]);
+  const { data: allProducts = [], isLoading, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
+
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeManufacturer, setActiveManufacturer] = useState("all");
   const [activeRating, setActiveRating] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    fetchProducts().then(setAllProducts);
-  }, []);
-
-  // Unique category / manufacturer IDs present in the data, for the sidebar lists
   const categoryIds = useMemo(
     () => [...new Set(allProducts.map((p) => p.categoryId))].filter((id) => categories[id]),
     [allProducts]
@@ -51,6 +50,14 @@ export default function Products() {
     });
   }, [allProducts, searchQuery, activeCategory, activeManufacturer, activeRating]);
 
+  if (isLoading) {
+    return <PageLayout><div>Loading products...</div></PageLayout>;
+  }
+
+  if (error) {
+    return <PageLayout><div>Error: {error.message}</div></PageLayout>;
+  }
+
   return (
     <>
       <SearchBarWrapper>
@@ -63,7 +70,7 @@ export default function Products() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <ClearSearchBtn $visible={Boolean(searchQuery)} title="Clear" onClick={() => setSearchQuery("")}>
-            &#10005;
+            ✕
           </ClearSearchBtn>
         </SearchBarInner>
       </SearchBarWrapper>
@@ -116,13 +123,13 @@ export default function Products() {
                 All
               </FilterItem>
               <FilterItem $active={activeRating === "5"} onClick={() => setActiveRating("5")}>
-                &#9733;&#9733;&#9733;&#9733;&#9733;
+                5★
               </FilterItem>
               <FilterItem $active={activeRating === "4"} onClick={() => setActiveRating("4")}>
-                &#9733;&#9733;&#9733;&#9733;+
+                4★+
               </FilterItem>
               <FilterItem $active={activeRating === "3"} onClick={() => setActiveRating("3")}>
-                &#9733;&#9733;&#9733;+
+                3★+
               </FilterItem>
             </FilterList>
           </SidebarSection>
