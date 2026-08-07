@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import ThemeToggle from "./components/ThemeToggle.jsx";
+import LanguageToggle from "./components/LanguageToggle.jsx";
 import { selectCartItemCount } from "../redux/cartSlice.js";
 import {
   Header,
@@ -15,8 +17,8 @@ import {
   Footer,
 } from "./Layout.styles.js";
 
-// Shared header/footer chrome for every routed page.
 export default function Layout() {
+  const { t } = useTranslation();
   const cartCount = useSelector(selectCartItemCount);
 
   return (
@@ -28,22 +30,21 @@ export default function Layout() {
         </BrandLogo>
 
         <Nav>
-          <NavItem to="/" end>
-            Homepage
-          </NavItem>
-          <NavItem to="/products">Products</NavItem>
-          <NavItem to="/cart">Cart</NavItem>
-          <NavItem to="/admin">Admin</NavItem>
+          <NavItem to="/" end>{t("nav.homepage")}</NavItem>
+          <NavItem to="/products">{t("nav.products")}</NavItem>
+          <NavItem to="/cart">{t("nav.cart")}</NavItem>
+          <NavItem to="/admin">{t("nav.admin")}</NavItem>
         </Nav>
 
         <HeaderActions>
+          <LanguageToggle />
           <ThemeToggle />
 
-          <IconLink to="/products" aria-label="Search products">
+          <IconLink to="/products" aria-label={t("nav.searchProducts")}>
             <span aria-hidden="true">P</span>
           </IconLink>
 
-          <CartLink to="/cart" aria-label="View cart">
+          <CartLink to="/cart" aria-label={t("nav.viewCart")}>
             <span aria-hidden="true">&#128722;</span>
             <CartBadge>{cartCount}</CartBadge>
           </CartLink>

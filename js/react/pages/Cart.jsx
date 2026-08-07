@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   removeProduct,
   updateQty,
@@ -30,12 +31,11 @@ import {
   ClearCartBtn,
 } from "./Cart.styles.js";
 
-// Port of html/cart.html + js/entities/Cart.js's DOM-binding logic
 export default function CartPage() {
+  const { t } = useTranslation();
   const cart = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
   const dispatch = useDispatch();
-  /** @type {import("../styles/theme.js").Theme} */
   const theme = useTheme();
 
   const cancelButtonStyle = {
@@ -76,16 +76,14 @@ export default function CartPage() {
   }
 
   function openClearCartModal() {
-    if (cart.length > 0) {
-      setClearCartModalOpen(true);
-    }
+    if (cart.length > 0) setClearCartModalOpen(true);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
     if (cart.length === 0) {
-      alert("Your cart is empty — add some items before ordering.");
+      alert(t("cart.emptyAlert"));
       return;
     }
 
@@ -103,7 +101,7 @@ export default function CartPage() {
     };
 
     console.log("Order submitted:", order);
-    alert("Order sent! Thank you.");
+    alert(t("cart.orderSent"));
     dispatch(clearCart());
     form.reset();
   }
@@ -113,27 +111,21 @@ export default function CartPage() {
       <CheckoutForm onSubmit={handleSubmit}>
         <Grid>
           <CartPanel>
-            <SectionTitle>Your Items</SectionTitle>
+            <SectionTitle>{t("cart.yourItems")}</SectionTitle>
             <div>
               {cart.length === 0 ? (
-                <EmptyCart>Your cart is empty.</EmptyCart>
+                <EmptyCart>{t("cart.empty")}</EmptyCart>
               ) : (
                 cart.map((item) => (
                   <CartRow key={item.id}>
                     <CartName>{item.name}</CartName>
                     <CartPrice>${((item.discountedPrice ?? item.price) * item.qty).toFixed(2)}</CartPrice>
                     <CartQty>
-                      <button
-                        type="button"
-                        onClick={() => dispatch(updateQty({ productId: item.id, delta: -1 }))}
-                      >
+                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: -1 }))}>
                         &minus;
                       </button>
                       <span>{item.qty}</span>
-                      <button
-                        type="button"
-                        onClick={() => dispatch(updateQty({ productId: item.id, delta: 1 }))}
-                      >
+                      <button type="button" onClick={() => dispatch(updateQty({ productId: item.id, delta: 1 }))}>
                         +
                       </button>
                     </CartQty>
@@ -145,85 +137,80 @@ export default function CartPage() {
               )}
             </div>
             <CartTotalRow>
-              <span>Total</span>
+              <span>{t("cart.total")}</span>
               <span>${total.toFixed(2)}</span>
             </CartTotalRow>
             <ClearCartBtn type="button" onClick={openClearCartModal} disabled={cart.length === 0}>
-              Clear cart
+              {t("cart.clearCart")}
             </ClearCartBtn>
           </CartPanel>
 
           <div>
-            <SectionTitle>Info</SectionTitle>
+            <SectionTitle>{t("cart.info")}</SectionTitle>
             <Field>
-              <input type="text" placeholder="Name, Surname" minLength={3} maxLength={40} required />
+              <input type="text" placeholder={t("cart.nameSurname")} minLength={3} maxLength={40} required />
             </Field>
             <Field>
               <input type="tel" placeholder="+380XXXXXXXXX" pattern="^\+?[0-9]{10,15}$" required />
             </Field>
             <Field>
-              <input type="text" placeholder="Special Instructions" maxLength={120} />
+              <input type="text" placeholder={t("cart.specialInstructions")} maxLength={120} />
             </Field>
           </div>
 
           <div>
-            <SectionTitle>Delivery</SectionTitle>
+            <SectionTitle>{t("cart.delivery")}</SectionTitle>
             <Field>
-              <FieldLabel>Way to deliver</FieldLabel>
+              <FieldLabel>{t("cart.wayToDeliver")}</FieldLabel>
               <select required defaultValue="">
-                <option value="">Choose delivery</option>
+                <option value="">{t("cart.chooseDelivery")}</option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
               </select>
             </Field>
             <Field>
-              <FieldLabel>Address</FieldLabel>
-              <input type="text" placeholder="City, Street" minLength={5} maxLength={80} required />
+              <FieldLabel>{t("cart.address")}</FieldLabel>
+              <input type="text" placeholder={t("cart.cityStreet")} minLength={5} maxLength={80} required />
             </Field>
           </div>
 
           <div>
-            <SectionTitle>Payment</SectionTitle>
+            <SectionTitle>{t("cart.payment")}</SectionTitle>
             <RadioRow>
               <input type="radio" name="payment" value="cod" required />
-              On pick up
+              {t("cart.onPickup")}
             </RadioRow>
             <RadioRow>
               <input type="radio" name="payment" value="card" />
-              Card
+              {t("cart.card")}
             </RadioRow>
           </div>
 
           <div>
             <CheckboxRow>
               <input type="checkbox" name="register" />
-              Register
+              {t("cart.register")}
             </CheckboxRow>
             <CheckboxRow>
               <input type="checkbox" name="no_call" defaultChecked />
-              The decision is final, don't call me back.
+              {t("cart.noCall")}
             </CheckboxRow>
           </div>
 
-          <SubmitBtn type="submit">Send</SubmitBtn>
+          <SubmitBtn type="submit">{t("cart.send")}</SubmitBtn>
         </Grid>
       </CheckoutForm>
 
-      {/* Remove Item Modal */}
       <Modal
         isOpen={removeModalOpen}
         onClose={() => setRemoveModalOpen(false)}
-        title="Remove Item"
+        title={t("cart.removeItem")}
         closeOnOverlayClick={false}
         footer={
           <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-            <button
-              type="button"
-              onClick={() => setRemoveModalOpen(false)}
-              style={cancelButtonStyle}
-            >
-              Cancel
+            <button type="button" onClick={() => setRemoveModalOpen(false)} style={cancelButtonStyle}>
+              {t("common.cancel")}
             </button>
             <button
               type="button"
@@ -237,30 +224,25 @@ export default function CartPage() {
                 color: "white",
               }}
             >
-              Remove
+              {t("common.remove")}
             </button>
           </div>
         }
       >
         <p>
-          Are you sure you want to remove <strong>{itemToRemove?.name}</strong> from your cart?
+          {t("cart.removeConfirm", { name: itemToRemove?.name })}
         </p>
       </Modal>
 
-      {/* Clear Cart Modal */}
       <Modal
         isOpen={clearCartModalOpen}
         onClose={() => setClearCartModalOpen(false)}
-        title="Clear Cart"
+        title={t("cart.clearCartTitle")}
         closeOnOverlayClick={false}
         footer={
           <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-            <button
-              type="button"
-              onClick={() => setClearCartModalOpen(false)}
-              style={cancelButtonStyle}
-            >
-              Cancel
+            <button type="button" onClick={() => setClearCartModalOpen(false)} style={cancelButtonStyle}>
+              {t("common.cancel")}
             </button>
             <button
               type="button"
@@ -274,12 +256,12 @@ export default function CartPage() {
                 color: "white",
               }}
             >
-              Clear All
+              {t("common.clearAll")}
             </button>
           </div>
         }
       >
-        <p>This will remove all items from your cart. This action cannot be undone.</p>
+        <p>{t("cart.clearConfirm")}</p>
       </Modal>
     </PageContainer>
   );

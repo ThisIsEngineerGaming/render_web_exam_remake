@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../redux/cartSlice.js";
@@ -82,10 +83,8 @@ const AddToCartBtn = styled.button`
   }
 `;
 
-// Port of js/entities/Product.js's createCard() method as a React component.
-// The whole card navigates to its /product/:id detail page on click; the "Add to cart"
-// button stops that click from bubbling up so it can do its own thing instead.
 export default function ProductCard({ product }) {
+  const { t } = useTranslation();
   const [added, setAdded] = useState(false);
   const [scale, setScale] = useState(1);
   const dispatch = useDispatch();
@@ -129,7 +128,7 @@ export default function ProductCard({ product }) {
       onKeyDown={handleCardKeyDown}
       role="link"
       tabIndex={0}
-      aria-label={`View details for ${product.name}`}
+      aria-label={t("productCard.viewDetails", { name: product.name })}
     >
       <CardImage src={product.imageUrl} alt={product.name} />
       <ProductName>{product.name}</ProductName>
@@ -137,7 +136,7 @@ export default function ProductCard({ product }) {
       <OriginalPrice>{product.price} $</OriginalPrice>
       <DiscountedPrice>{product.discountedPrice} $</DiscountedPrice>
       <AddToCartBtn $added={added} $scale={scale} disabled={added} onClick={handleAdd}>
-        {added ? "Added!" : "Add to cart"}
+        {added ? t("productCard.added") : t("productCard.addToCart")}
       </AddToCartBtn>
     </Card>
   );

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const TickerWrap = styled.div`
@@ -40,9 +41,8 @@ const ScrollContent = styled.div`
   }
 `;
 
-// Fills the track with clones of the original content until it's at least twice the viewport width, then continuously scrolls it leftward, looping seamlessly.
-// Port of js/entities/Scroller.js as a self-contained React component.
 export default function MarqueeTicker() {
+  const { t } = useTranslation();
   const trackRef = useRef(null);
   const originalRef = useRef(null);
 
@@ -69,6 +69,7 @@ export default function MarqueeTicker() {
       track.style.transform = `translateX(${x}px)`;
       frameId = requestAnimationFrame(animate);
     }
+
     animate();
 
     return () => {
@@ -84,11 +85,11 @@ export default function MarqueeTicker() {
         <ScrollContent ref={originalRef}>
           <p>Mail A Bomb</p>
           <p>|</p>
-          <p>Its awesome</p>
+          <p>{t("ticker.awesome")}</p>
           <p>|</p>
-          <p>We hate people</p>
+          <p>{t("ticker.hatePeople")}</p>
           <p>|</p>
-          <p>We love bombs</p>
+          <p>{t("ticker.loveBombs")}</p>
           <p>|</p>
         </ScrollContent>
       </ScrollTrack>

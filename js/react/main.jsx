@@ -11,6 +11,7 @@ import CartPage from "./pages/Cart.jsx";
 import Admin from "./pages/Admin.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ThemeWrapper from "./styles/ThemeWrapper.jsx";
+import "./i18n/index.js";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

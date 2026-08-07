@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import MarqueeTicker from "../components/MarqueeTicker.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers, customer } from "../data.js";
 import Order from "../../entities/Order.js";
 import { VideoBanner, VideoOverlay, ProductsGrid, ShowMore } from "./Home.styles.js";
 
-// Port of the "INDEX PAGE" block from the old js/app.js
 export default function Home() {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -17,7 +18,6 @@ export default function Home() {
       const preview = data.slice(0, 8);
       setProducts(preview);
 
-      // Preserve the original demo console output / entity wiring
       const instances = preview.map(createProductInstance);
       const order = new Order(1, customer, instances, "Created", new Date());
       console.log(categories[1].getInfo());
@@ -36,10 +36,10 @@ export default function Home() {
   return (
     <>
       <VideoBanner>
-        <marquee behavior="scroll" direction="right" loop="infinite" bgColor="#0f0f0f">
-          <img src="/img/placeholder.png" alt="freddy" />
-          <img src="/img/placeholder.png" alt="freddy" />
-          <img src="/img/placeholder.png" alt="freddy" />
+        <marquee behavior="scroll" direction="right" loop="infinite" bgcolor="#0f0f0f">
+          <img src="/img/placeholder.png" alt={t("home.imageAlt")} />
+          <img src="/img/placeholder.png" alt={t("home.imageAlt")} />
+          <img src="/img/placeholder.png" alt={t("home.imageAlt")} />
         </marquee>
         <VideoOverlay>
           <p>MailABom</p>
@@ -55,7 +55,7 @@ export default function Home() {
       </ProductsGrid>
 
       <ShowMore to="/products">
-        <p>showmore</p>
+        <p>{t("home.showMore")}</p>
       </ShowMore>
     </>
   );

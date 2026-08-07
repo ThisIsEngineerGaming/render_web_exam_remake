@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
   NotFoundContainer,
@@ -8,15 +9,15 @@ import {
 } from "./NotFound.styles.js";
 
 export default function NotFound() {
+  const { t } = useTranslation();
+
   return (
     <NotFoundContainer>
       <ErrorCode>404</ErrorCode>
-      <ErrorTitle>Page Not Found</ErrorTitle>
-      <ErrorDescription>
-        Oops! The page you're looking for doesn't exist or has been moved.
-      </ErrorDescription>
+      <ErrorTitle>{t("notFound.title")}</ErrorTitle>
+      <ErrorDescription>{t("notFound.description")}</ErrorDescription>
       <Link to="/">
-        <BackLink>Return to Homepage</BackLink>
+        <BackLink>{t("notFound.returnHome")}</BackLink>
       </Link>
     </NotFoundContainer>
   );

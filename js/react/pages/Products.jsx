@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts, createProductInstance, categories, manufacturers } from "../data.js";
 import {
@@ -17,8 +18,8 @@ import {
   NoResults,
 } from "./Products.styles.js";
 
-// Port of the "PRODUCTS PAGE" block from the old js/app.js
 export default function Products() {
+  const { t } = useTranslation();
   const [allProducts, setAllProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeManufacturer, setActiveManufacturer] = useState("all");
@@ -29,11 +30,11 @@ export default function Products() {
     fetchProducts().then(setAllProducts);
   }, []);
 
-  // Unique category / manufacturer IDs present in the data, for the sidebar lists
   const categoryIds = useMemo(
     () => [...new Set(allProducts.map((p) => p.categoryId))].filter((id) => categories[id]),
     [allProducts]
   );
+
   const manufacturerIds = useMemo(
     () => [...new Set(allProducts.map((p) => p.manufacturerId))].filter((id) => manufacturers[id]),
     [allProducts]
@@ -57,12 +58,18 @@ export default function Products() {
         <SearchBarInner>
           <SearchInput
             type="text"
-            placeholder="Search products..."
+            placeholder={t("productsPage.searchPlaceholder")}
             autoComplete="off"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label={t("productsPage.searchPlaceholder")}
           />
-          <ClearSearchBtn $visible={Boolean(searchQuery)} title="Clear" onClick={() => setSearchQuery("")}>
+          <ClearSearchBtn
+            $visible={Boolean(searchQuery)}
+            title={t("productsPage.clearSearch")}
+            aria-label={t("productsPage.clearSearch")}
+            onClick={() => setSearchQuery("")}
+          >
             &#10005;
           </ClearSearchBtn>
         </SearchBarInner>
@@ -71,10 +78,10 @@ export default function Products() {
       <PageLayout>
         <FilterSidebar>
           <SidebarSection>
-            <h3>Category</h3>
+            <h3>{t("productsPage.category")}</h3>
             <FilterList>
               <FilterItem $active={activeCategory === "all"} onClick={() => setActiveCategory("all")}>
-                All
+                {t("common.all")}
               </FilterItem>
               {categoryIds.map((id) => (
                 <FilterItem
@@ -82,20 +89,20 @@ export default function Products() {
                   $active={String(activeCategory) === String(id)}
                   onClick={() => setActiveCategory(id)}
                 >
-                  {categories[id].name}
+                  {t(`categories.${id}`)}
                 </FilterItem>
               ))}
             </FilterList>
           </SidebarSection>
 
           <SidebarSection>
-            <h3>Manufacturer</h3>
+            <h3>{t("productsPage.manufacturer")}</h3>
             <FilterList>
               <FilterItem
                 $active={activeManufacturer === "all"}
                 onClick={() => setActiveManufacturer("all")}
               >
-                All
+                {t("common.all")}
               </FilterItem>
               {manufacturerIds.map((id) => (
                 <FilterItem
@@ -103,17 +110,17 @@ export default function Products() {
                   $active={String(activeManufacturer) === String(id)}
                   onClick={() => setActiveManufacturer(id)}
                 >
-                  {manufacturers[id].name}
+                  {t(`manufacturers.${id}`)}
                 </FilterItem>
               ))}
             </FilterList>
           </SidebarSection>
 
           <SidebarSection>
-            <h3>Rating</h3>
+            <h3>{t("productsPage.rating")}</h3>
             <FilterList>
               <FilterItem $active={activeRating === "all"} onClick={() => setActiveRating("all")}>
-                All
+                {t("common.all")}
               </FilterItem>
               <FilterItem $active={activeRating === "5"} onClick={() => setActiveRating("5")}>
                 &#9733;&#9733;&#9733;&#9733;&#9733;
@@ -131,7 +138,7 @@ export default function Products() {
         <ProductsMain>
           <ResultsInfo>
             {filtered.length > 0
-              ? `${filtered.length} product${filtered.length !== 1 ? "s" : ""} found`
+              ? t("productsPage.found", { count: filtered.length })
               : ""}
           </ResultsInfo>
 
@@ -141,7 +148,9 @@ export default function Products() {
             ))}
           </ProductsContainer>
 
-          {filtered.length === 0 && <NoResults>No products found matching your search.</NoResults>}
+          {filtered.length === 0 && (
+            <NoResults>{t("productsPage.noResults")}</NoResults>
+          )}
         </ProductsMain>
       </PageLayout>
     </>
