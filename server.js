@@ -4,11 +4,14 @@ const path    = require("path");
 const cors    = require("cors");
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const PRODUCTS_PATH = path.join(__dirname, "json", "products.json");
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from dist folder (React build)
+app.use(express.static(path.join(__dirname, "dist")));
 
 // GET /api/products — reads products.json from disk and returns its contents as JSON
 app.get("/api/products", (req, res) => {
@@ -40,6 +43,11 @@ app.post("/api/products", (req, res) => {
   }
 });
 
+// Fallback to React's index.html for client-side routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`Admin API server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
