@@ -28,8 +28,8 @@ export const Eyebrow = styled.p`
 export const Title = styled.h1`
   margin: 8px 0;
   color: ${({ theme }) => theme.text};
-  font-size: clamp(1.5rem, 5vw, 2.4rem);
-  text-align: left;
+  font-size: clamp(1.3rem, 5vw, 2.1rem);
+  text-align: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
